@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+<link 
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
+    rel="stylesheet" 
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" 
+    crossorigin="anonymous">
+<title>smallLetter</title>
+</head>
+<body>
+<script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous">
+</script>
+<script 
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" 
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" 
+    crossorigin="anonymous">
+</script>
+<form name="myform">
+    <input name="myfile" type="file" />
+    <textarea name="output" cols="80" rows="5"></textarea>
+    <br>変換後<br>
+    <textarea name="output_change" cols="80" rows="5"></textarea>
+</form>
+
+<script>
+if (window.File) {
+    // File APIに関する処理を記述
+    //window.alert("File APIが実装されてます。");
+} else {
+    window.alert("本ブラウザではFile APIが使えません");
+}
+
+//Form要素を取得する
+var form = document.forms.myform;
+
+////////////////////////////////////////////////////////////
+// ファイルが読み込まれた時の処理
+////////////////////////////////////////////////////////////
+form.myfile.addEventListener('change', function(e) {
+
+    ////////////////////////////////////////////////////////
+    // 読み込んだファイルの中身を取得する
+    ////////////////////////////////////////////////////////
+    var result = e.target.files[0];
+    var reader = new FileReader();
+    reader.readAsText( result );
+
+
+    /////////////////////////////////////////////////////////
+    // ファイルの中身を取得後に処理を行う
+    /////////////////////////////////////////////////////////
+    reader.addEventListener( 'load', function() {
+
+        /////////////////////////////////////////////////////
+        // ファイルの中身をtextarea内に表示する
+        /////////////////////////////////////////////////////
+        form.output.textContent = reader.result;
+
+
+        /////////////////////////////////////////////////////
+        // CSVを1行ずつ読み込む
+        /////////////////////////////////////////////////////
+        var resultArray = [];
+        resultArray = reader.result.split('\n');
+        resultToHankaku = [];
+
+
+        //////////////////////////////////////////////////////
+        // 半角データに入れ替える
+        //////////////////////////////////////////////////////
+        for(i=0;i<resultArray.length-1;i++){
+            var division = [];
+            division = resultArray[i].split(',');
+
+            //全角数値、アルファベットを半角に変換
+            var hankaku = zenkakuTohankaku(division[16]);
+
+            //全角カタカナを半角に変換
+            var hanString = zenkanaTohankana(hankaku);
+
+            //1列のみ半角変換
+            division[16] = hanString;
+            resultToHankaku.push(division);
+        }
+
+
+        ///////////////////////////////////////////////////////////////////////
+        // 変換後データをブラウザに表示する
+        ///////////////////////////////////////////////////////////////////////
+        form.output_change.textContent = resultToHankaku;
+
+
+        ///////////////////////////////////////////////////////////////////////
+        // 配列をCSVに変換し、ダウンロードする
+        ///////////////////////////////////////////////////////////////////////
+        downloadCsv(resultToHankaku);
+    })
+})
+
+function zenkakuTohankaku(str) {
+    return str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+        return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+    });
+}
+
+function zenkanaTohankana(str) {
+    var kanaMap = {
+         "ガ": "ｶﾞ", "ギ": "ｷﾞ", "グ": "ｸﾞ", "ゲ": "ｹﾞ", "ゴ": "ｺﾞ",
+         "ザ": "ｻﾞ", "ジ": "ｼﾞ", "ズ": "ｽﾞ", "ゼ": "ｾﾞ", "ゾ": "ｿﾞ",
+         "ダ": "ﾀﾞ", "ヂ": "ﾁﾞ", "ヅ": "ﾂﾞ", "デ": "ﾃﾞ", "ド": "ﾄﾞ",
+         "バ": "ﾊﾞ", "ビ": "ﾋﾞ", "ブ": "ﾌﾞ", "ベ": "ﾍﾞ", "ボ": "ﾎﾞ",
+         "パ": "ﾊﾟ", "ピ": "ﾋﾟ", "プ": "ﾌﾟ", "ペ": "ﾍﾟ", "ポ": "ﾎﾟ",
+         "ヴ": "ｳﾞ", "ヷ": "ﾜﾞ", "ヺ": "ｦﾞ",
+         "ア": "ｱ", "イ": "ｲ", "ウ": "ｳ", "エ": "ｴ", "オ": "ｵ",
+         "カ": "ｶ", "キ": "ｷ", "ク": "ｸ", "ケ": "ｹ", "コ": "ｺ",
+         "サ": "ｻ", "シ": "ｼ", "ス": "ｽ", "セ": "ｾ", "ソ": "ｿ",
+         "タ": "ﾀ", "チ": "ﾁ", "ツ": "ﾂ", "テ": "ﾃ", "ト": "ﾄ",
+         "ナ": "ﾅ", "ニ": "ﾆ", "ヌ": "ﾇ", "ネ": "ﾈ", "ノ": "ﾉ",
+         "ハ": "ﾊ", "ヒ": "ﾋ", "フ": "ﾌ", "ヘ": "ﾍ", "ホ": "ﾎ",
+         "マ": "ﾏ", "ミ": "ﾐ", "ム": "ﾑ", "メ": "ﾒ", "モ": "ﾓ",
+         "ヤ": "ﾔ", "ユ": "ﾕ", "ヨ": "ﾖ",
+         "ラ": "ﾗ", "リ": "ﾘ", "ル": "ﾙ", "レ": "ﾚ", "ロ": "ﾛ",
+         "ワ": "ﾜ", "ヲ": "ｦ", "ン": "ﾝ",
+         "ァ": "ｧ", "ィ": "ｨ", "ゥ": "ｩ", "ェ": "ｪ", "ォ": "ｫ",
+         "ッ": "ｯ", "ャ": "ｬ", "ュ": "ｭ", "ョ": "ｮ",
+         "。": "｡", "、": "､", "ー": "ｰ", "「": "｢", "」": "｣", "・": "･"
+    }
+    var reg = new RegExp('(' + Object.keys(kanaMap).join('|') + ')', 'g');
+    return str
+            .replace(reg, function (match) {
+                return kanaMap[match];
+            })
+            .replace(/゛/g, 'ﾞ')
+            .replace(/゜/g, 'ﾟ');
+};
+
+///////////////////////////////////////////////////////////////////////
+// 配列をCSVに変換し、ダウンロードする
+///////////////////////////////////////////////////////////////////////
+
+var downloadCsv = (function() {
+
+    //配列をcsvに変換
+    var tableToCsvString = function(table) {
+        var str = '\uFEFF';
+        for (var i = 0, imax = table.length - 1; i <= imax; ++i) {
+            var row = table[i];
+            for (var j = 0, jmax = row.length - 1; j <= jmax; ++j) {
+                str += '"' + row[j].replace('"', '""') + '"';
+                if (j !== jmax) {
+                    str += ',';
+                }
+            }
+            str += '\n';
+        }
+        return str;
+    };
+    var createDataUriFromString = function(str) {
+        return 'data:text/csv,' + encodeURIComponent(str);
+    }
+
+    //<a>要素を自動でクリックしてダウンロードを始める
+    var downloadDataUri = function(uri, filename) {
+        var link = document.createElement('a');
+        link.download = filename;
+        link.href = uri;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    //ファイル名を指定
+    return function(table, filename) {
+        if (!filename) {
+            filename = 'output.csv';
+        }
+        var uri = createDataUriFromString(tableToCsvString(table));
+        downloadDataUri(uri, filename);
+    };
+})();
+</script>
+</body>
+</html>
