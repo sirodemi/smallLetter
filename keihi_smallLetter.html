@@ -23,6 +23,7 @@
 </script>
 <form name="myform">
     <input name="myfile" type="file" />
+    <br>
     <textarea name="output" cols="80" rows="5"></textarea>
     <br>変換後<br>
     <textarea name="output_change" cols="80" rows="5"></textarea>
@@ -58,7 +59,7 @@ form.myfile.addEventListener('change', function(e) {
     reader.addEventListener( 'load', function() {
 
         /////////////////////////////////////////////////////
-        // ファイルの中身をtextarea内に表示する
+        // 変換前のファイルの中身をtextarea内に表示する
         /////////////////////////////////////////////////////
         form.output.textContent = reader.result;
 
