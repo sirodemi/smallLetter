@@ -1,12 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+<link 
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
+    rel="stylesheet" 
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" 
+    crossorigin="anonymous">
+<title>smallLetter</title>
+</head>
+<body>
+<script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous">
+</script>
+<script 
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" 
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" 
+    crossorigin="anonymous">
+</script>
 <script src="../library/encoding.js-master/encoding.js"></script>
-<input type="file" id="file">
-<div id="encoding"></div>
-<textarea id="result" rows="5" cols="80"></textarea>
+<form name="myform">
+    <input name="myfile" type="file" />
+    <br>
+    <textarea name="output" cols="80" rows="5"></textarea>
+    <br>変換後<br>
+    <textarea name="output_change" cols="80" rows="5"></textarea>
+</form>
 
 <script>
-function onFileSelect(event) {
-  var file = event.target.files[0];
+if (window.File) {
+    // File APIに関する処理を記述
+    //window.alert("File APIが実装されてます。");
+} else {
+    window.alert("本ブラウザではFile APIが使えません");
+}
 
+//Form要素を取得する
+var form = document.forms.myform;
+
+
+form.myfile.addEventListener('change', function(event) {
+    var file = event.target.files[0];
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var codes = new Uint8Array(e.target.result);
+        var encoding = Encoding.detect(codes);
+        console.log(encoding);
+
+        var unicodeString = Encoding.convert(codes, {
+            to: 'unicode',
+            from: encoding,
+            type: 'string'
+        });
+
+        console.log(unicodeString);
+
+        /////////////////////////////////////////////////////
+        // 変換前のファイルの中身をtextarea内に表示する
+        /////////////////////////////////////////////////////
+        form.output.textContent = unicodeString;
+
+
+        /////////////////////////////////////////////////////
+        // CSVを1行ずつ読み込む
+        /////////////////////////////////////////////////////
+        var resultArray = [];
+        resultArray = unicodeString.split('\n');
+        resultToHankaku = [];
+
+
+
+        
+
+
+    };
+    reader.readAsArrayBuffer(file);
+  /*
   var reader = new FileReader();
   reader.onload = function(e) {
     var codes = new Uint8Array(e.target.result);
@@ -20,10 +92,12 @@ function onFileSelect(event) {
       type: 'string'
     });
     document.getElementById('result').value = unicodeString;
+    
   };
+  */
 
-  reader.readAsArrayBuffer(file);
-}
+  //reader.readAsArrayBuffer(file);
+});
 
-document.getElementById('file').addEventListener('change', onFileSelect, false);
+//document.getElementById('file').addEventListener('change', onFileSelect, false);
 </script>
