@@ -21,6 +21,7 @@
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" 
     crossorigin="anonymous">
 </script>
+<script src="../library/encoding.js-master/encoding.js"></script>
 <form name="myform">
     <input name="myfile" type="file" />
     <br>
@@ -49,6 +50,8 @@ form.myfile.addEventListener('change', function(e) {
     // 読み込んだファイルの中身を取得する
     ////////////////////////////////////////////////////////
     var result = e.target.files[0];
+
+    
     var reader = new FileReader();
     reader.readAsText( result );
 
