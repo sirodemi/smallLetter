@@ -1,0 +1,29 @@
+<script src="../library/encoding.js-master/encoding.js"></script>
+<input type="file" id="file">
+<div id="encoding"></div>
+<textarea id="result" rows="5" cols="80"></textarea>
+
+<script>
+function onFileSelect(event) {
+  var file = event.target.files[0];
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var codes = new Uint8Array(e.target.result);
+    var encoding = Encoding.detect(codes);
+    document.getElementById('encoding').textContent = encoding;
+
+    // Convert encoding to unicode
+    var unicodeString = Encoding.convert(codes, {
+      to: 'unicode',
+      from: encoding,
+      type: 'string'
+    });
+    document.getElementById('result').value = unicodeString;
+  };
+
+  reader.readAsArrayBuffer(file);
+}
+
+document.getElementById('file').addEventListener('change', onFileSelect, false);
+</script>
