@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-<link 
-    href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
-    rel="stylesheet" 
-    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" 
+<link
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
     crossorigin="anonymous">
 <title>smallLetter</title>
 </head>
@@ -16,9 +16,9 @@
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
     crossorigin="anonymous">
 </script>
-<script 
-    src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" 
-    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" 
+<script
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
     crossorigin="anonymous">
 </script>
 <script src="../library/encoding.js-master/encoding.js"></script>
@@ -51,7 +51,7 @@ form.myfile.addEventListener('change', function(e) {
     ////////////////////////////////////////////////////////
     var result = e.target.files[0];
 
-    
+
     var reader = new FileReader();
     reader.readAsText( result );
 
@@ -72,6 +72,17 @@ form.myfile.addEventListener('change', function(e) {
         /////////////////////////////////////////////////////
         var resultArray = [];
         resultArray = reader.result.split('\n');
+
+
+
+var detected = Encoding.detect(utf8Array);
+console.log('文字コード：',detected);
+
+
+
+
+
+
         resultToHankaku = [];
 
 
