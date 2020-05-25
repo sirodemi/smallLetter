@@ -21,7 +21,7 @@
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
     crossorigin="anonymous">
 </script>
-<script src="../library/encoding.js-master/encoding.js"></script>
+<script src="./encoding.js"></script>
 <form name="myform">
     <input name="myfile" type="file" />
     <br>
@@ -66,6 +66,8 @@ form.myfile.addEventListener('change', function(e) {
         /////////////////////////////////////////////////////
         form.output.textContent = reader.result;
 
+console.log(reader.result.charCodeAt(0));
+
 
         /////////////////////////////////////////////////////
         // CSVを1行ずつ読み込む
@@ -74,13 +76,13 @@ form.myfile.addEventListener('change', function(e) {
         resultArray = reader.result.split('\n');
 
 
-/*
-var detected = Encoding.detect(utf8Array);
-console.log('文字コード：',detected);
-*/
 
+//var detected = Encoding.detect(utf8Array);
 
+//var detected = Encoding.detect(resultArray, 'SJIS');
+//console.log('文字コード：',detected);
 
+var detected = Encoding.convert(resultArray, 'UTF8','SJIS');
 
 
         resultToHankaku = [];
