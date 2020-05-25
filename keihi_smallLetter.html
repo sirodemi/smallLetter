@@ -53,7 +53,7 @@ form.myfile.addEventListener('change', function(e) {
 
 
     var reader = new FileReader();
-    reader.readAsText( result );
+    reader.readAsText( result,'shift-jis');
 
 
     /////////////////////////////////////////////////////////
@@ -82,7 +82,7 @@ console.log(reader.result.charCodeAt(0));
 //var detected = Encoding.detect(resultArray, 'SJIS');
 //console.log('文字コード：',detected);
 
-var detected = Encoding.convert(resultArray, 'UTF8','SJIS');
+//var detected = Encoding.convert(resultArray, 'UTF8','SJIS');
 
 
         resultToHankaku = [];

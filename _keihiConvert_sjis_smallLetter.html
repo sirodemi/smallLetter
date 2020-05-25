@@ -53,6 +53,7 @@ form.myfile.addEventListener('change', function(event) {
 
         var codes = new Uint8Array(e.target.result);
         var encoding = Encoding.detect(codes);  //'SJIS'
+
         var unicodeString = Encoding.convert(codes, {
             to: 'unicode',
             from: encoding,
@@ -172,7 +173,6 @@ var tableToCsvString = function(table) {
         }
         str += '\n';
     }
-
     return str;
 };
 var createDataUriFromString = function(str) {
